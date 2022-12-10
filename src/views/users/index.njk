@@ -1,0 +1,42 @@
+{% extends "create.njk" %}
+{% include "users/create.njk" %}
+
+{% block script %}
+<script type="module">
+  import api from '/js/services/api.js';
+
+function loadUserFormValues(titleUser, userName, userEmail, userSenha, userConfirmSenha) {
+    const formLabelUser = document.querySelector('#formUserLabel');
+    const userNameInput = document.querySelector('#user-name');
+    const userEmailInput = document.querySelector('#user-email');
+    const userSenhaInput = document.querySelector('#user-password');
+    const userConfirmarSenhaInput = document.querySelector('#user-confirm_password');
+
+    formLabelUser.innerHTML = title;
+    userNameInput.value = userName;
+    userEmailInput.value = userEmail;
+    userSenhaInput.value = userSenha;
+    userConfirmarSenhaInput.value = userConfirmSenha;
+  }
+
+  function loadCreateUserForm() {
+    document.querySelector('#CadastroFormButton').blur();
+
+    const formU = document.querySelector('#formUser');
+
+    loadUserFormValues('Cadastrar Usuário', '', '', '', '');
+
+    formU.onsubmit = async (e) => {
+      e.preventDefault();
+
+      const user = Object.fromEntries(new FormData(formU));
+
+      const newFood = await api.create('/users', user);
+
+      window.location.href = '/users/index';
+    };
+  }
+
+  window.loadCreateUserForm = loadCreateUserForm;
+</script>
+{% endblock %}
